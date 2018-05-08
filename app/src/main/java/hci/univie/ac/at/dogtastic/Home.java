@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 public class Home extends AppCompatActivity {
 
-    //comment naomi xxx yyy
+    //comment naomi xxx yyy zzz
     //comment AGAIN
     @Override
     protected void onCreate(Bundle savedInstanceState) {
