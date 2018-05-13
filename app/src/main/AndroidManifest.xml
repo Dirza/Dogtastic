@@ -38,6 +38,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity_Stats"></activity>
+        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".RoutesOverview"></activity>
     </application>
 
 </manifest>
