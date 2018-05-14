@@ -16,17 +16,6 @@ import java.util.List;
 /**
  * Created by Jasmin on 13.05.2018.
  */
-class DataHelper{
-    String name;
-    LatLng start;
-    LatLng end;
-
-    DataHelper(String name, LatLng start, LatLng end){
-        this.name=name;
-        this.start=start;
-        this.end=end;
-    }
-}
 
 public class RoutesOverview extends FragmentActivity implements View.OnClickListener{
 
@@ -39,16 +28,10 @@ public class RoutesOverview extends FragmentActivity implements View.OnClickList
         setContentView(R.layout.activity_routes);
 
         lv = (ListView) findViewById(R.id.listview);
-
-        // Instanciating an array list (you don't need to do this,
-        // you already have yours).
         List<String> routen = new ArrayList<String>();
         routen.add("Route 1");
         routen.add("Route 2");
 
-        // This is the array adapter, it takes the context of the activity as a
-        // first parameter, the type of list view as a second parameter and your
-        // array as a third parameter.
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,routen

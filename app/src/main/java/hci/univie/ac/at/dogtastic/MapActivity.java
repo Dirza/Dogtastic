@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 
@@ -29,6 +30,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private Button startbutton;
     private Button pauseButton;
     TextView timer;
+
+    private Handler mHandler;
+    long start_time;
+
+
     private static final int LOCATION_REQUEST = 500;
 
     private long pauseOffset;
@@ -46,6 +52,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        mHandler = new Handler();
 
     }
 
@@ -75,26 +83,48 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         if(startbutton.getText().toString().equals("START")){
             startbutton.setText("STOP");
             startbutton.setBackgroundColor(Color.RED);
+            startTimer();;
         } else if(startbutton.getText().toString().equals("STOP")){
-            startbutton.setBackgroundColor(Color.GREEN);
-            Intent startmap = new Intent(this, RoutesOverview.class);
-            startActivity(startmap);
+            startbutton.setBackgroundColor(Color.GRAY);
+            startbutton.setText("SPEICHERN");
+            pauseButton.setText("SCHLIESSEN");
+            mHandler.removeCallbacks(mRunnable);
+        }  else if(startbutton.getText().toString().equals("SPEICHERN")){
+            Intent save = new Intent(this, SaveActivity.class);
+            startActivity(save);
         }
     }
 
-    public void startChronometer(View v) {
-        if (!running) {
-
-            running = true;
-        }
+    public void startTimer() {
+        running = true;
+        mHandler.postDelayed(mRunnable, 10L);
+        start_time = System.currentTimeMillis();
     }
 
     public void pauseRoute(View v) {
         if(pauseButton.getText().toString().equals("PAUSE")){
-            pauseButton.setText("WEITER");
-        } else if(pauseButton.getText().toString().equals("WEITER")){
+            pauseButton.setText("FORTSETZEN");
+            running=false;
+            mHandler.removeCallbacks(mRunnable);
+        } else if(pauseButton.getText().toString().equals("FORTSETZEN")){
             pauseButton.setText("PAUSE");
+            running = true;
+            mRunnable.run();
+        } else if(pauseButton.getText().toString().equals("SCHLIESSEN")) {
+            Intent overview = new Intent(this, RoutesOverview.class);
+            startActivity(overview);
         }
     }
 
+    private final Runnable mRunnable = new Runnable(){
+        @Override
+        public void run() {
+            if(running){
+                long millis = (System.currentTimeMillis() - start_time);
+                long seconds = millis/1000;
+                timer.setText(String.format("%02d:%02d:%02d", seconds/60, seconds % 60, millis % 100));
+                mHandler.postDelayed(mRunnable,10L);
+            }
+        }
+    };
 }
